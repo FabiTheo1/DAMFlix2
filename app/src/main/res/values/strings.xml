@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">DAMFlix</string>
+    <string name="user_name">Fabian Gonzalez Olofsson</string>
+    <string name="user_role">Critico Peliculas</string>
+    <string name="film_number">%1$d Peliculas Vistas</string>
+    <string name="film_review">%1$d Reseñas</string>
+</resources>
