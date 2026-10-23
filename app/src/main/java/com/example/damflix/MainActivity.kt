@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.KeyboardOptions
@@ -21,10 +22,9 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.compose.currentBackStackEntryAsState
-import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.filled.FavoriteBorder
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -69,12 +69,6 @@ data class Pelicula(
     val esFavorita: Boolean = false
 )
 
-// Enum para la navegación entre pantallas
-enum class Pantalla {
-    FORMULARIO,
-    LISTA
-}
-
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -92,15 +86,25 @@ class MainActivity : ComponentActivity() {
 fun DAMFlixApp(modifier: Modifier = Modifier) {
     // Lista persistente en memoria durante la ejecución
     val peliculas = remember { mutableStateListOf<Pelicula>() }
-    var pantallaActual by remember { mutableStateOf(Pantalla.FORMULARIO) }
     val navController = rememberNavController()
+
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val rutaActual = navBackStackEntry?.destination?.route
+
+    fun navegarAInicio() {
+        if (rutaActual != Ruta.Inicio.path) {
+            if (!navController.popBackStack(Ruta.Inicio.path, inclusive = false)) {
+                navController.navigate(Ruta.Inicio.path) {
+                    popUpTo(0) { inclusive = true }
+                    launchSingleTop = true
+                }
+            }
+        }
+    }
 
     Scaffold(
         modifier = modifier.fillMaxSize(),
         bottomBar = {
-            val navBackStackEntry by navController.currentBackStackEntryAsState()
-            val rutaActual = navBackStackEntry?.destination?.route
-
             NavigationBar {
                 listOf(
                     Ruta.Inicio,
@@ -111,17 +115,21 @@ fun DAMFlixApp(modifier: Modifier = Modifier) {
                         selected = rutaActual == ruta.path,
                         onClick = {
                             if (rutaActual != ruta.path) {
-                                navController.navigate(ruta.path) {
-                                    popUpTo(navController.graph.startDestinationId) {
-                                        saveState = true
+                                if (ruta.path == Ruta.Inicio.path) {
+                                    navegarAInicio()
+                                } else {
+                                    navController.navigate(ruta.path) {
+                                        popUpTo(navController.graph.startDestinationId) {
+                                            saveState = true
+                                        }
+                                        launchSingleTop = true
+                                        restoreState = true
                                     }
-                                    launchSingleTop = true
-                                    restoreState = true
                                 }
                             }
                         },
                         icon = { Icon(ruta.icon, contentDescription = ruta.label) },
-                        label = { Text(ruta.label)}
+                        label = { Text(ruta.label) }
                     )
                 }
             }
@@ -130,22 +138,45 @@ fun DAMFlixApp(modifier: Modifier = Modifier) {
             TopAppBar(
                 title = {
                     Text(
-                        text = if (pantallaActual == Pantalla.FORMULARIO) "Lista de Películas" else "Lista - Mis Películas",
+                        text = when (rutaActual) {
+                            Ruta.Inicio.path -> "DAMFlix - Inicio"
+                            Ruta.Listado.path -> "Lista - Mis Películas"
+                            Ruta.Formulario.path -> "Alta de Película"
+                            else -> "DAMFlix"
+                        },
                         fontWeight = FontWeight.Bold
                     )
+                },
+                navigationIcon = {
+                    if (rutaActual != Ruta.Inicio.path) {
+                        IconButton(onClick = { navegarAInicio() }) {
+                            Icon(
+                                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                                contentDescription = "Volver a Inicio"
+                            )
+                        }
+                    }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = MaterialTheme.colorScheme.primaryContainer,
                     titleContentColor = MaterialTheme.colorScheme.onPrimaryContainer
                 ),
                 actions = {
-                    if (pantallaActual == Pantalla.FORMULARIO) {
-                        TextButton(onClick = { pantallaActual = Pantalla.LISTA }) {
-                            Text("Ver Guardadas (${peliculas.size})")
+                    when (rutaActual) {
+                        Ruta.Formulario.path -> {
+                            TextButton(onClick = { navController.navigate(Ruta.Listado.path) }) {
+                                Text("Ver Guardadas (${peliculas.size})")
+                            }
                         }
-                    } else {
-                        TextButton(onClick = { pantallaActual = Pantalla.FORMULARIO }) {
-                            Text("Añadir Nueva")
+                        Ruta.Listado.path -> {
+                            TextButton(onClick = { navController.navigate(Ruta.Formulario.path) }) {
+                                Text("Añadir Nueva")
+                            }
+                        }
+                        Ruta.Inicio.path -> {
+                            TextButton(onClick = { navController.navigate(Ruta.Listado.path) }) {
+                                Text("Ver Lista (${peliculas.size})")
+                            }
                         }
                     }
                 }
@@ -158,7 +189,10 @@ fun DAMFlixApp(modifier: Modifier = Modifier) {
             modifier = Modifier.padding(innerPadding)
         ) {
             composable(Ruta.Inicio.path) {
-                PantallaInicioScreen()
+                PantallaInicioScreen(
+                    onNavegarListado = { navController.navigate(Ruta.Listado.path) },
+                    onNavegarFormulario = { navController.navigate(Ruta.Formulario.path) }
+                )
             }
             composable(Ruta.Listado.path) {
                 ListaPeliculasScreen(
@@ -170,7 +204,9 @@ fun DAMFlixApp(modifier: Modifier = Modifier) {
                                 esFavorita = !peliculaAModificar.esFavorita
                             )
                         }
-                    }
+                    },
+                    onNavegarFormulario = { navController.navigate(Ruta.Formulario.path) },
+                    onVolverInicio = { navegarAInicio() }
                 )
             }
             composable(Ruta.Formulario.path) {
@@ -178,6 +214,10 @@ fun DAMFlixApp(modifier: Modifier = Modifier) {
                     onGuardarPelicula = { nuevaPelicula ->
                         peliculas.add(nuevaPelicula)
                     },
+                    onVerListaClicked = {
+                        navController.navigate(Ruta.Listado.path)
+                    },
+                    onVolverInicio = { navegarAInicio() }
                 )
             }
         }
@@ -185,15 +225,87 @@ fun DAMFlixApp(modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun PantallaInicioScreen() {
-    
+fun PantallaInicioScreen(
+    modifier: Modifier = Modifier,
+    onNavegarListado: () -> Unit = {},
+    onNavegarFormulario: () -> Unit = {}
+) {
+    Column(
+        modifier = modifier
+            .fillMaxSize()
+            .padding(24.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        // Icono o logotipo principal
+        Icon(
+            imageVector = Icons.Default.Movie,
+            contentDescription = "DAMFlix Logo",
+            modifier = Modifier.size(96.dp),
+            tint = MaterialTheme.colorScheme.primary
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        // Título de bienvenida
+        Text(
+            text = "Bienvenido/a a DAMFlix",
+            fontSize = 28.sp,
+            fontWeight = FontWeight.Bold,
+            color = MaterialTheme.colorScheme.primary
+        )
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        // Descripción de la aplicación
+        Text(
+            text = "Tu catálogo personal de películas. Gestiona tus títulos guardados y tus favoritos en un solo lugar.",
+            fontSize = 16.sp,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            modifier = Modifier.padding(horizontal = 16.dp)
+        )
+
+        Spacer(modifier = Modifier.height(32.dp))
+
+        // Tarjeta informativa o botones de acceso directo
+        Card(
+            modifier = Modifier.fillMaxWidth(),
+            colors = CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.surfaceVariant
+            )
+        ) {
+            Column(
+                modifier = Modifier.padding(16.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                Text(
+                    text = "Acciones Rápidas 🚀",
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 18.sp
+                )
+                Button(
+                    onClick = onNavegarListado,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text("Ver Catálogo de Películas")
+                }
+                OutlinedButton(
+                    onClick = onNavegarFormulario,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text("Añadir Nueva Película")
+                }
+            }
+        }
+    }
 }
 
 @Composable
 fun FormularioPeliculaScreen(
     modifier: Modifier = Modifier,
     onGuardarPelicula: (Pelicula) -> Unit = {},
-    onVerListaClicked: () -> Unit = {}
+    onVerListaClicked: () -> Unit = {},
+    onVolverInicio: () -> Unit = {}
 ) {
     val context = LocalContext.current
 
@@ -262,12 +374,23 @@ fun FormularioPeliculaScreen(
 
         Spacer(modifier = Modifier.weight(1f))
 
-        // Botón para navegar a la pantalla de lista
-        OutlinedButton(
-            onClick = onVerListaClicked,
-            modifier = Modifier.fillMaxWidth()
+        // Botones de acción inferior
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            Text("Ver Películas Guardadas")
+            OutlinedButton(
+                onClick = onVolverInicio,
+                modifier = Modifier.weight(1f)
+            ) {
+                Text("Volver a Inicio")
+            }
+            OutlinedButton(
+                onClick = onVerListaClicked,
+                modifier = Modifier.weight(1f)
+            ) {
+                Text("Ver Películas")
+            }
         }
 
         // Botón de guardado con aviso Toast si algún campo está vacío
@@ -303,7 +426,8 @@ fun ListaPeliculasScreen(
     peliculas: List<Pelicula>,
     modifier: Modifier = Modifier,
     onToggleFavorito: (Pelicula) -> Unit = {},
-    onNavegarFormulario: () -> Unit = {}
+    onNavegarFormulario: () -> Unit = {},
+    onVolverInicio: () -> Unit = {}
 ) {
     Column(
         modifier = modifier
@@ -348,11 +472,22 @@ fun ListaPeliculasScreen(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        Button(
-            onClick = onNavegarFormulario,
-            modifier = Modifier.fillMaxWidth()
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            Text("Añadir otra película")
+            OutlinedButton(
+                onClick = onVolverInicio,
+                modifier = Modifier.weight(1f)
+            ) {
+                Text("Volver a Inicio")
+            }
+            Button(
+                onClick = onNavegarFormulario,
+                modifier = Modifier.weight(1f)
+            ) {
+                Text("Añadir Película")
+            }
         }
     }
 }
