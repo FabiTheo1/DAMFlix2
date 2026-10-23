@@ -17,6 +17,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
@@ -28,6 +33,8 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
@@ -86,9 +93,39 @@ fun DAMFlixApp(modifier: Modifier = Modifier) {
     // Lista persistente en memoria durante la ejecución
     val peliculas = remember { mutableStateListOf<Pelicula>() }
     var pantallaActual by remember { mutableStateOf(Pantalla.FORMULARIO) }
+    val navController = rememberNavController()
 
     Scaffold(
         modifier = modifier.fillMaxSize(),
+        bottomBar = {
+            val navBackStackEntry by navController.currentBackStackEntryAsState()
+            val rutaActual = navBackStackEntry?.destination?.route
+
+            NavigationBar {
+                listOf(
+                    Ruta.Inicio,
+                    Ruta.Listado,
+                    Ruta.Formulario
+                ).forEach { ruta ->
+                    NavigationBarItem(
+                        selected = rutaActual == ruta.path,
+                        onClick = {
+                            if (rutaActual != ruta.path) {
+                                navController.navigate(ruta.path) {
+                                    popUpTo(navController.graph.startDestinationId) {
+                                        saveState = true
+                                    }
+                                    launchSingleTop = true
+                                    restoreState = true
+                                }
+                            }
+                        },
+                        icon = { Icon(ruta.icon, contentDescription = ruta.label) },
+                        label = { Text(ruta.label)}
+                    )
+                }
+            }
+        },
         topBar = {
             TopAppBar(
                 title = {
@@ -115,19 +152,15 @@ fun DAMFlixApp(modifier: Modifier = Modifier) {
             )
         }
     ) { innerPadding ->
-        when (pantallaActual) {
-            Pantalla.FORMULARIO -> {
-                FormularioPeliculaScreen(
-                    modifier = Modifier.padding(innerPadding),
-                    onGuardarPelicula = { nuevaPelicula ->
-                        peliculas.add(nuevaPelicula)
-                    },
-                    onVerListaClicked = {
-                        pantallaActual = Pantalla.LISTA
-                    }
-                )
+        NavHost(
+            navController = navController,
+            startDestination = Ruta.Inicio.path,
+            modifier = Modifier.padding(innerPadding)
+        ) {
+            composable(Ruta.Inicio.path) {
+                PantallaInicioScreen()
             }
-            Pantalla.LISTA -> {
+            composable(Ruta.Listado.path) {
                 ListaPeliculasScreen(
                     peliculas = peliculas,
                     onToggleFavorito = { peliculaAModificar ->
@@ -137,16 +170,23 @@ fun DAMFlixApp(modifier: Modifier = Modifier) {
                                 esFavorita = !peliculaAModificar.esFavorita
                             )
                         }
-
-                    },
-                    modifier = Modifier.padding(innerPadding),
-                    onNavegarFormulario = {
-                        pantallaActual = Pantalla.FORMULARIO
                     }
+                )
+            }
+            composable(Ruta.Formulario.path) {
+                FormularioPeliculaScreen(
+                    onGuardarPelicula = { nuevaPelicula ->
+                        peliculas.add(nuevaPelicula)
+                    },
                 )
             }
         }
     }
+}
+
+@Composable
+fun PantallaInicioScreen() {
+    
 }
 
 @Composable
