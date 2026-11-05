@@ -4,4 +4,56 @@
     <string name="user_role">Critico Peliculas</string>
     <string name="film_number">%1$d Peliculas Vistas</string>
     <string name="film_review">%1$d Reseñas</string>
+
+    <!-- Navegación y Títulos de Barra -->
+    <string name="nav_inicio">Inicio</string>
+    <string name="nav_listado">Listado</string>
+    <string name="nav_formulario">Añadir</string>
+    <string name="title_inicio">DAMFlix - Inicio</string>
+    <string name="title_listado">Lista - Mis Películas</string>
+    <string name="title_formulario">Alta de Película</string>
+    <string name="action_ver_guardadas">Ver Guardadas (%1$d)</string>
+    <string name="action_anadir_nueva">Añadir Nueva</string>
+    <string name="action_ver_lista">Ver Lista (%1$d)</string>
+    <string name="nav_back_content_description">Volver a Inicio</string>
+
+    <!-- Pantalla Inicio -->
+    <string name="inicio_logo_desc">DAMFlix Logo</string>
+    <string name="inicio_welcome_title">Bienvenido/a a DAMFlix</string>
+    <string name="inicio_welcome_desc">Tu catálogo personal de películas. Gestiona tus títulos guardados y tus favoritos en un solo lugar.</string>
+    <string name="inicio_quick_actions">Acciones Rápidas 🚀</string>
+    <string name="inicio_btn_ver_catalogo">Ver Catálogo de Películas</string>
+    <string name="inicio_btn_anadir_nueva">Añadir Nueva Película</string>
+
+    <!-- Pantalla Formulario -->
+    <string name="form_title">Alta de Película</string>
+    <string name="form_label_titulo">Título de la Película</string>
+    <string name="form_label_director">Director/a</string>
+    <string name="form_label_genero">Género</string>
+    <string name="form_label_anio">Año de estreno</string>
+    <string name="form_label_sinopsis">Sinopsis</string>
+    <string name="form_checkbox_vista">Ya he visto esta película</string>
+    <string name="form_checkbox_pendiente">Película pendiente de ver</string>
+    <string name="btn_volver_inicio">Volver a Inicio</string>
+    <string name="btn_ver_peliculas">Ver Películas</string>
+    <string name="btn_guardar_pelicula">Guardar Película</string>
+    <string name="toast_fill_all_fields">Completa todos los campos</string>
+    <string name="toast_movie_saved">Película guardada</string>
+    <string name="synopsis_word_count">%1$d / 600 palabras</string>
+    <string name="toast_synopsis_limit_exceeded">La sinopsis no puede superar las 600 palabras</string>
+
+    <!-- Pantalla Listado -->
+    <string name="list_title">Películas Guardadas</string>
+    <string name="list_empty">No hay películas guardadas.</string>
+    <string name="btn_anadir_otra">Añadir otra película</string>
+    <string name="btn_anadir_pelicula">Añadir Película</string>
+
+    <!-- Tarjeta de Película -->
+    <string name="card_director">Director/a: %1$s</string>
+    <string name="card_genero">Género: %1$s</string>
+    <string name="card_anio">Año: %1$s</string>
+    <string name="card_sinopsis">Sinopsis: %1$s</string>
+    <string name="card_status_vista">Vista</string>
+    <string name="card_status_pendiente">Pendiente</string>
+    <string name="card_fav_content_desc">Añadir a favoritos</string>
 </resources>

@@ -18,9 +18,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.damflix.R
 import com.example.damflix.data.model.Pelicula
 import com.example.damflix.ui.components.PeliculaItemCard
 
@@ -38,7 +40,7 @@ fun ListaPeliculasScreen(
             .padding(16.dp)
     ) {
         Text(
-            text = "Películas Guardadas",
+            text = stringResource(R.string.list_title),
             fontSize = 24.sp,
             fontWeight = FontWeight.Bold,
             color = MaterialTheme.colorScheme.primary,
@@ -53,7 +55,7 @@ fun ListaPeliculasScreen(
                 contentAlignment = Alignment.Center
             ) {
                 Text(
-                    text = "No hay películas guardadas.",
+                    text = stringResource(R.string.list_empty),
                     style = MaterialTheme.typography.bodyLarge,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
@@ -63,7 +65,7 @@ fun ListaPeliculasScreen(
                 modifier = Modifier.weight(1f),
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
-                items(items = peliculas, key = { pelicula -> pelicula.titulo }) { pelicula ->
+                items(items = peliculas, key = { pelicula -> pelicula.id.takeIf { it != 0L } ?: pelicula.titulo }) { pelicula ->
                     PeliculaItemCard(
                         pelicula = pelicula,
                         onToggleFavorito = { onToggleFavorito(pelicula) }
@@ -82,13 +84,13 @@ fun ListaPeliculasScreen(
                 onClick = onVolverInicio,
                 modifier = Modifier.weight(1f)
             ) {
-                Text("Volver a Inicio")
+                Text(stringResource(R.string.btn_volver_inicio))
             }
             Button(
                 onClick = onNavegarFormulario,
                 modifier = Modifier.weight(1f)
             ) {
-                Text("Añadir Película")
+                Text(stringResource(R.string.btn_anadir_pelicula))
             }
         }
     }

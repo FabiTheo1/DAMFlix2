@@ -21,9 +21,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.damflix.R
 import com.example.damflix.data.model.Pelicula
 
 @Composable
@@ -56,22 +58,36 @@ fun PeliculaItemCard(
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
                 Text(
-                    text = "Director/a: ${pelicula.director}",
+                    text = stringResource(R.string.card_director, pelicula.director),
                     fontSize = 14.sp,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
+                if (pelicula.genero.isNotBlank()) {
+                    Text(
+                        text = stringResource(R.string.card_genero, pelicula.genero),
+                        fontSize = 14.sp,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
                 Text(
-                    text = "Año: ${pelicula.anio}",
+                    text = stringResource(R.string.card_anio, pelicula.anio),
                     fontSize = 14.sp,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
+                if (pelicula.sinopsis.isNotBlank()) {
+                    Text(
+                        text = stringResource(R.string.card_sinopsis, pelicula.sinopsis),
+                        fontSize = 13.sp,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
                 Spacer(modifier = Modifier.height(4.dp))
                 Surface(
                     shape = MaterialTheme.shapes.small,
                     color = if (pelicula.esVista) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.secondaryContainer
                 ) {
                     Text(
-                        text = if (pelicula.esVista) "Vista" else "Pendiente",
+                        text = if (pelicula.esVista) stringResource(R.string.card_status_vista) else stringResource(R.string.card_status_pendiente),
                         modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
                         fontSize = 12.sp,
                         fontWeight = FontWeight.Medium,
@@ -84,7 +100,7 @@ fun PeliculaItemCard(
             ) {
                 Icon(
                     imageVector = if (pelicula.esFavorita) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
-                    contentDescription = "Añadir a favoritos",
+                    contentDescription = stringResource(R.string.card_fav_content_desc),
                     tint = if (pelicula.esFavorita) Color.Red else Color.Gray
                 )
             }

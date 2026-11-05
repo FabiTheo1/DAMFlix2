@@ -19,6 +19,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
@@ -91,10 +92,10 @@ fun DAMFlixApp(
                 title = {
                     Text(
                         text = when (rutaActual) {
-                            Ruta.Inicio.path -> "DAMFlix - Inicio"
-                            Ruta.Listado.path -> "Lista - Mis Películas"
-                            Ruta.Formulario.path -> "Alta de Película"
-                            else -> "DAMFlix"
+                            Ruta.Inicio.path -> stringResource(R.string.title_inicio)
+                            Ruta.Listado.path -> stringResource(R.string.title_listado)
+                            Ruta.Formulario.path -> stringResource(R.string.title_formulario)
+                            else -> stringResource(R.string.app_name)
                         },
                         fontWeight = FontWeight.Bold
                     )
@@ -104,7 +105,7 @@ fun DAMFlixApp(
                         IconButton(onClick = { navegarAInicio() }) {
                             Icon(
                                 imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                                contentDescription = "Volver a Inicio"
+                                contentDescription = stringResource(R.string.nav_back_content_description)
                             )
                         }
                     }
@@ -117,17 +118,17 @@ fun DAMFlixApp(
                     when (rutaActual) {
                         Ruta.Formulario.path -> {
                             TextButton(onClick = { navController.navigate(Ruta.Listado.path) }) {
-                                Text("Ver Guardadas (${peliculas.size})")
+                                Text(stringResource(R.string.action_ver_guardadas, peliculas.size))
                             }
                         }
                         Ruta.Listado.path -> {
                             TextButton(onClick = { navController.navigate(Ruta.Formulario.path) }) {
-                                Text("Añadir Nueva")
+                                Text(stringResource(R.string.action_anadir_nueva))
                             }
                         }
                         Ruta.Inicio.path -> {
                             TextButton(onClick = { navController.navigate(Ruta.Listado.path) }) {
-                                Text("Ver Lista (${peliculas.size})")
+                                Text(stringResource(R.string.action_ver_lista, peliculas.size))
                             }
                         }
                     }

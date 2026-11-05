@@ -1,31 +1,42 @@
 package com.example.damflix.ui.viewmodel
 
-import androidx.lifecycle.ViewModel
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.viewModelScope
+import com.example.damflix.data.PeliculaRepository
 import com.example.damflix.data.model.Pelicula
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 
-class PeliculaViewModel : ViewModel() {
+class PeliculaViewModel(application: Application) : AndroidViewModel(application) {
+    private val repository = PeliculaRepository(application)
+
     private val _peliculas = MutableStateFlow<List<Pelicula>>(emptyList())
     val peliculas: StateFlow<List<Pelicula>> = _peliculas.asStateFlow()
 
+    init {
+        cargarPeliculas()
+    }
+
+    fun cargarPeliculas() {
+        viewModelScope.launch {
+            _peliculas.value = repository.obtenerTodas()
+        }
+    }
+
     fun agregarPelicula(pelicula: Pelicula) {
-        _peliculas.update { actual ->
-            actual + pelicula
+        viewModelScope.launch {
+            repository.insertar(pelicula)
+            cargarPeliculas()
         }
     }
 
     fun toggleFavorito(pelicula: Pelicula) {
-        _peliculas.update { actual ->
-            actual.map {
-                if (it.titulo == pelicula.titulo) {
-                    it.copy(esFavorita = !it.esFavorita)
-                } else {
-                    it
-                }
-            }
+        viewModelScope.launch {
+            repository.actualizarFavorito(pelicula)
+            cargarPeliculas()
         }
     }
 }

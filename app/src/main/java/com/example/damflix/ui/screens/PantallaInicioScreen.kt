@@ -20,9 +20,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.damflix.R
 
 @Composable
 fun PantallaInicioScreen(
@@ -39,7 +41,7 @@ fun PantallaInicioScreen(
     ) {
         Icon(
             imageVector = Icons.Default.Movie,
-            contentDescription = "DAMFlix Logo",
+            contentDescription = stringResource(R.string.inicio_logo_desc),
             modifier = Modifier.size(96.dp),
             tint = MaterialTheme.colorScheme.primary
         )
@@ -47,7 +49,7 @@ fun PantallaInicioScreen(
         Spacer(modifier = Modifier.height(16.dp))
 
         Text(
-            text = "Bienvenido/a a DAMFlix",
+            text = stringResource(R.string.inicio_welcome_title),
             fontSize = 28.sp,
             fontWeight = FontWeight.Bold,
             color = MaterialTheme.colorScheme.primary
@@ -56,7 +58,7 @@ fun PantallaInicioScreen(
         Spacer(modifier = Modifier.height(8.dp))
 
         Text(
-            text = "Tu catálogo personal de películas. Gestiona tus títulos guardados y tus favoritos en un solo lugar.",
+            text = stringResource(R.string.inicio_welcome_desc),
             fontSize = 16.sp,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             modifier = Modifier.padding(horizontal = 16.dp)
@@ -75,7 +77,7 @@ fun PantallaInicioScreen(
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 Text(
-                    text = "Acciones Rápidas 🚀",
+                    text = stringResource(R.string.inicio_quick_actions),
                     fontWeight = FontWeight.Bold,
                     fontSize = 18.sp
                 )
@@ -83,13 +85,13 @@ fun PantallaInicioScreen(
                     onClick = onNavegarListado,
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    Text("Ver Catálogo de Películas")
+                    Text(stringResource(R.string.inicio_btn_ver_catalogo))
                 }
                 OutlinedButton(
                     onClick = onNavegarFormulario,
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    Text("Añadir Nueva Película")
+                    Text(stringResource(R.string.inicio_btn_anadir_nueva))
                 }
             }
         }
