@@ -17,6 +17,11 @@
     <string name="action_ver_lista">Ver Lista (%1$d)</string>
     <string name="nav_back_content_description">Volver a Inicio</string>
 
+    <!-- Drawer de Navegación -->
+    <string name="drawer_header_title">DAMFlix</string>
+    <string name="drawer_header_subtitle">Menú de Navegación</string>
+    <string name="nav_drawer_open">Abrir menú de navegación</string>
+
     <!-- Pantalla Inicio -->
     <string name="inicio_logo_desc">DAMFlix Logo</string>
     <string name="inicio_welcome_title">Bienvenido/a a DAMFlix</string>

@@ -26,7 +26,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.damflix.R
-import com.example.damflix.data.model.Pelicula
+import com.example.damflix.data.local.Pelicula
 
 @Composable
 fun PeliculaItemCard(
