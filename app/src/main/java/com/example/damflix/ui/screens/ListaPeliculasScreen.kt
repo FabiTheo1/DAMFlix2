@@ -16,6 +16,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -35,20 +39,49 @@ fun ListaPeliculasScreen(
     onNavegarFormulario: () -> Unit = {},
     onVolverInicio: () -> Unit = {}
 ) {
+    var ordenarActivo by remember { mutableStateOf(true) }
+
+    fun ordenarPeliculas(lista: List<PeliculaEntity>): List<PeliculaEntity> {
+        return lista.sortedWith(
+            compareBy<PeliculaEntity> { it.titulo.lowercase() }.thenBy { it.anio }
+        )
+    }
+
+    val peliculasMostradas = if (ordenarActivo) {
+        ordenarPeliculas(peliculas)
+    } else {
+        peliculas
+    }
+
     Column(
         modifier = modifier
             .fillMaxSize()
             .padding(16.dp)
     ) {
-        Text(
-            text = stringResource(R.string.list_title),
-            fontSize = 24.sp,
-            fontWeight = FontWeight.Bold,
-            color = MaterialTheme.colorScheme.primary,
-            modifier = Modifier.padding(bottom = 16.dp)
-        )
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 16.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = stringResource(R.string.list_title),
+                fontSize = 24.sp,
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.primary
+            )
 
-        if (peliculas.isEmpty()) {
+            OutlinedButton(
+                onClick = { ordenarActivo = !ordenarActivo }
+            ) {
+                Text(
+                    text = if (ordenarActivo) stringResource(R.string.btn_ordenar_titulo_anio) else stringResource(R.string.btn_desactivar_orden)
+                )
+            }
+        }
+
+        if (peliculasMostradas.isEmpty()) {
             Box(
                 modifier = Modifier
                     .weight(1f)
@@ -66,7 +99,7 @@ fun ListaPeliculasScreen(
                 modifier = Modifier.weight(1f),
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
-                items(items = peliculas, key = { pelicula -> pelicula.id.takeIf { it != 0L } ?: pelicula.titulo }) { pelicula ->
+                items(items = peliculasMostradas, key = { pelicula -> pelicula.id.takeIf { it != 0L } ?: pelicula.titulo }) { pelicula ->
                     PeliculaItemCard(
                         pelicula = pelicula,
                         onToggleFavorito = { onToggleFavorito(pelicula) },

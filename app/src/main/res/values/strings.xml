@@ -52,6 +52,8 @@
     <string name="list_empty">No hay películas guardadas.</string>
     <string name="btn_anadir_otra">Añadir otra película</string>
     <string name="btn_anadir_pelicula">Añadir Película</string>
+    <string name="btn_ordenar_titulo_anio">Ordenar por Título y Año</string>
+    <string name="btn_desactivar_orden">Desactivar orden</string>
 
     <!-- Tarjeta de Película -->
     <string name="card_director">Director/a: %1$s</string>

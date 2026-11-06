@@ -126,7 +126,7 @@ fun FormularioPeliculaScreen(
             value = sinopsis,
             onValueChange = { nuevoTexto ->
                 val palabrasNuevas = contarPalabras(nuevoTexto)
-                if ((palabrasNuevas <= 600) || (nuevoTexto.length < sinopsis.length)) {
+                if ((palabrasNuevas <= 150) || (nuevoTexto.length < sinopsis.length)) {
                     sinopsis = nuevoTexto
                 }
             },
@@ -134,10 +134,10 @@ fun FormularioPeliculaScreen(
             supportingText = {
                 Text(
                     text = stringResource(R.string.synopsis_word_count, numPalabrasSinopsis),
-                    color = if (numPalabrasSinopsis > 600) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onSurfaceVariant
+                    color = if (numPalabrasSinopsis > 150) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onSurfaceVariant
                 )
             },
-            isError = numPalabrasSinopsis > 600,
+            isError = numPalabrasSinopsis > 150,
             singleLine = false,
             maxLines = 4,
             keyboardOptions = KeyboardOptions(
@@ -185,7 +185,7 @@ fun FormularioPeliculaScreen(
             onClick = {
                 if (titulo.isBlank() || director.isBlank() || anio.isBlank()) {
                     Toast.makeText(context, fillFieldsMsg, Toast.LENGTH_SHORT).show()
-                } else if (numPalabrasSinopsis > 600) {
+                } else if (numPalabrasSinopsis > 150) {
                     Toast.makeText(context, limitExceededMsg, Toast.LENGTH_SHORT).show()
                 } else {
                     val pelicula = PeliculaEntity(
