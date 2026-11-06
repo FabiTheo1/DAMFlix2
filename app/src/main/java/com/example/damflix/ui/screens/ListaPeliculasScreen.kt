@@ -23,14 +23,15 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.damflix.R
-import com.example.damflix.data.local.Pelicula
+import com.example.damflix.data.local.PeliculaEntity
 import com.example.damflix.ui.components.PeliculaItemCard
 
 @Composable
 fun ListaPeliculasScreen(
-    peliculas: List<Pelicula>,
+    peliculas: List<PeliculaEntity>,
     modifier: Modifier = Modifier,
-    onToggleFavorito: (Pelicula) -> Unit = {},
+    onToggleFavorito: (PeliculaEntity) -> Unit = {},
+    onToggleVista: (PeliculaEntity) -> Unit = {},
     onNavegarFormulario: () -> Unit = {},
     onVolverInicio: () -> Unit = {}
 ) {
@@ -68,7 +69,8 @@ fun ListaPeliculasScreen(
                 items(items = peliculas, key = { pelicula -> pelicula.id.takeIf { it != 0L } ?: pelicula.titulo }) { pelicula ->
                     PeliculaItemCard(
                         pelicula = pelicula,
-                        onToggleFavorito = { onToggleFavorito(pelicula) }
+                        onToggleFavorito = { onToggleFavorito(pelicula) },
+                        onToggleVista = { onToggleVista(pelicula) }
                     )
                 }
             }

@@ -12,14 +12,14 @@ import kotlinx.coroutines.flow.Flow
 interface PeliculaDao {
 
     @Query("SELECT * FROM peliculas ORDER BY id DESC")
-    fun obtenerTodas(): Flow<List<Pelicula>>
+    fun obtenerTodas(): Flow<List<PeliculaEntity>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertar(pelicula: Pelicula)
+    suspend fun insertar(pelicula: PeliculaEntity)
 
     @Update
-    suspend fun actualizar(pelicula: Pelicula)
+    suspend fun actualizar(pelicula: PeliculaEntity)
 
     @Delete
-    suspend fun eliminar(pelicula: Pelicula)
+    suspend fun eliminar(pelicula: PeliculaEntity)
 }

@@ -189,7 +189,8 @@ fun DAMFlixApp(
                 composable(Ruta.Listado.path) {
                     ListaPeliculasScreen(
                         peliculas = peliculas,
-                        onToggleFavorito = { pelicula -> viewModel.toggleFavorito(pelicula) },
+                        onToggleFavorito = { pelicula -> viewModel.alternarFavorita(pelicula) },
+                        onToggleVista = { pelicula -> viewModel.alternarVista(pelicula) },
                         onNavegarFormulario = { navController.navigate(Ruta.Formulario.path) },
                         onVolverInicio = { navegarAInicio() }
                     )

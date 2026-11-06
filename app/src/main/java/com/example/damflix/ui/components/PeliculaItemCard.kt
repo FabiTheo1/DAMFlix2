@@ -1,5 +1,6 @@
 package com.example.damflix.ui.components
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -26,12 +27,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.damflix.R
-import com.example.damflix.data.local.Pelicula
+import com.example.damflix.data.local.PeliculaEntity
 
 @Composable
 fun PeliculaItemCard(
-    pelicula: Pelicula,
+    pelicula: PeliculaEntity,
     onToggleFavorito: () -> Unit,
+    onToggleVista: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     Card(
@@ -84,7 +86,8 @@ fun PeliculaItemCard(
                 Spacer(modifier = Modifier.height(4.dp))
                 Surface(
                     shape = MaterialTheme.shapes.small,
-                    color = if (pelicula.esVista) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.secondaryContainer
+                    color = if (pelicula.esVista) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.secondaryContainer,
+                    modifier = Modifier.clickable { onToggleVista() }
                 ) {
                     Text(
                         text = if (pelicula.esVista) stringResource(R.string.card_status_vista) else stringResource(R.string.card_status_pendiente),

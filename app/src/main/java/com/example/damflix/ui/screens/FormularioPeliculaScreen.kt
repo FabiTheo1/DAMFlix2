@@ -32,7 +32,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.damflix.R
-import com.example.damflix.data.local.Pelicula
+import com.example.damflix.data.local.PeliculaEntity
 
 private fun contarPalabras(texto: String): Int {
     val trimmed = texto.trim()
@@ -43,7 +43,7 @@ private fun contarPalabras(texto: String): Int {
 @Composable
 fun FormularioPeliculaScreen(
     modifier: Modifier = Modifier,
-    onGuardarPelicula: (Pelicula) -> Unit = {},
+    onGuardarPelicula: (PeliculaEntity) -> Unit = {},
     onVerListaClicked: () -> Unit = {},
     onVolverInicio: () -> Unit = {}
 ) {
@@ -126,7 +126,7 @@ fun FormularioPeliculaScreen(
             value = sinopsis,
             onValueChange = { nuevoTexto ->
                 val palabrasNuevas = contarPalabras(nuevoTexto)
-                if ((palabrasNuevas <= 240) || (nuevoTexto.length < sinopsis.length)) {
+                if ((palabrasNuevas <= 600) || (nuevoTexto.length < sinopsis.length)) {
                     sinopsis = nuevoTexto
                 }
             },
@@ -134,10 +134,10 @@ fun FormularioPeliculaScreen(
             supportingText = {
                 Text(
                     text = stringResource(R.string.synopsis_word_count, numPalabrasSinopsis),
-                    color = if (numPalabrasSinopsis > 240) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onSurfaceVariant
+                    color = if (numPalabrasSinopsis > 600) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onSurfaceVariant
                 )
             },
-            isError = numPalabrasSinopsis > 240,
+            isError = numPalabrasSinopsis > 600,
             singleLine = false,
             maxLines = 4,
             keyboardOptions = KeyboardOptions(
@@ -185,10 +185,10 @@ fun FormularioPeliculaScreen(
             onClick = {
                 if (titulo.isBlank() || director.isBlank() || anio.isBlank()) {
                     Toast.makeText(context, fillFieldsMsg, Toast.LENGTH_SHORT).show()
-                } else if (numPalabrasSinopsis > 240) {
+                } else if (numPalabrasSinopsis > 600) {
                     Toast.makeText(context, limitExceededMsg, Toast.LENGTH_SHORT).show()
                 } else {
-                    val pelicula = Pelicula(
+                    val pelicula = PeliculaEntity(
                         titulo = titulo.trim(),
                         director = director.trim(),
                         genero = genero.trim(),
