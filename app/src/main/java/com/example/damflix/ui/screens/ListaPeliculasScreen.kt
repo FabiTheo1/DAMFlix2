@@ -37,6 +37,7 @@ fun ListaPeliculasScreen(
     onToggleFavorito: (PeliculaEntity) -> Unit = {},
     onToggleVista: (PeliculaEntity) -> Unit = {},
     onNavegarFormulario: () -> Unit = {},
+    onNavegarDetalle: (Int) -> Unit = {},
     onVolverInicio: () -> Unit = {}
 ) {
     var ordenarActivo by remember { mutableStateOf(true) }
@@ -103,7 +104,8 @@ fun ListaPeliculasScreen(
                     PeliculaItemCard(
                         pelicula = pelicula,
                         onToggleFavorito = { onToggleFavorito(pelicula) },
-                        onToggleVista = { onToggleVista(pelicula) }
+                        onToggleVista = { onToggleVista(pelicula) },
+                        onPeliculaClick = { onNavegarDetalle(pelicula.id.toInt()) }
                     )
                 }
             }

@@ -34,10 +34,13 @@ fun PeliculaItemCard(
     pelicula: PeliculaEntity,
     onToggleFavorito: () -> Unit,
     onToggleVista: () -> Unit = {},
+    onPeliculaClick: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     Card(
-        modifier = modifier.fillMaxWidth(),
+        modifier = modifier
+            .fillMaxWidth()
+            .clickable { onPeliculaClick() },
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surfaceVariant

@@ -17,6 +17,10 @@ class PeliculaViewModel(private val repository: PeliculaRepository) : ViewModel(
         initialValue = emptyList()
     )
 
+    suspend fun obtenerPeliculaPorId(id: Int): PeliculaEntity? {
+        return repository.obtenerPeliculaPorId(id)
+    }
+
     fun agregarPelicula(pelicula: PeliculaEntity) {
         viewModelScope.launch {
             repository.insertar(pelicula)

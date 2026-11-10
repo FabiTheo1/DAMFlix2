@@ -44,8 +44,8 @@
     <string name="btn_guardar_pelicula">Guardar Película</string>
     <string name="toast_fill_all_fields">Completa todos los campos</string>
     <string name="toast_movie_saved">Película guardada</string>
-    <string name="synopsis_word_count">%1$d / 600 palabras</string>
-    <string name="toast_synopsis_limit_exceeded">La sinopsis no puede superar las 600 palabras</string>
+    <string name="synopsis_word_count">%1$d / 150 palabras</string>
+    <string name="toast_synopsis_limit_exceeded">La sinopsis no puede superar las 150 palabras</string>
 
     <!-- Pantalla Listado -->
     <string name="list_title">Películas Guardadas</string>
@@ -63,4 +63,14 @@
     <string name="card_status_vista">Vista</string>
     <string name="card_status_pendiente">Pendiente</string>
     <string name="card_fav_content_desc">Añadir a favoritos</string>
+
+    <!-- Pantalla Detalle -->
+    <string name="detalle_titulo">Detalle de la Película</string>
+    <string name="detalle_director">Director: %1$s</string>
+    <string name="detalle_genero">Género: %1$s</string>
+    <string name="detalle_anio">Año de estreno: %1$d</string>
+    <string name="detalle_sinopsis">Sinopsis</string>
+    <string name="detalle_boton_volver">Volver al Catálogo</string>
+    <string name="detalle_cargando">Cargando información de la película...</string>
+    <string name="detalle_error">No se encontró la película seleccionada.</string>
 </resources>

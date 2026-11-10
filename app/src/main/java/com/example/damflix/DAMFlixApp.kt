@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -32,11 +33,14 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.example.damflix.ui.navigation.Ruta
+import com.example.damflix.ui.screens.DetallePeliculaScreen
 import com.example.damflix.ui.screens.FormularioPeliculaScreen
 import com.example.damflix.ui.screens.ListaPeliculasScreen
 import com.example.damflix.ui.screens.PantallaInicioScreen
@@ -132,21 +136,31 @@ fun DAMFlixApp(
                 TopAppBar(
                     title = {
                         Text(
-                            text = when (rutaActual) {
-                                Ruta.Inicio.path -> stringResource(R.string.title_inicio)
-                                Ruta.Listado.path -> stringResource(R.string.title_listado)
-                                Ruta.Formulario.path -> stringResource(R.string.title_formulario)
+                            text = when {
+                                rutaActual == Ruta.Inicio.path -> stringResource(R.string.title_inicio)
+                                rutaActual == Ruta.Listado.path -> stringResource(R.string.title_listado)
+                                rutaActual == Ruta.Formulario.path -> stringResource(R.string.title_formulario)
+                                rutaActual?.startsWith("detalle/") == true -> stringResource(R.string.detalle_titulo)
                                 else -> stringResource(R.string.app_name)
                             },
                             fontWeight = FontWeight.Bold
                         )
                     },
                     navigationIcon = {
-                        IconButton(onClick = { scope.launch { drawerState.open() } }) {
-                            Icon(
-                                imageVector = Icons.Default.Menu,
-                                contentDescription = stringResource(R.string.nav_drawer_open)
-                            )
+                        if (rutaActual?.startsWith("detalle/") == true) {
+                            IconButton(onClick = { navController.popBackStack() }) {
+                                Icon(
+                                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                                    contentDescription = stringResource(R.string.nav_back_content_description)
+                                )
+                            }
+                        } else {
+                            IconButton(onClick = { scope.launch { drawerState.open() } }) {
+                                Icon(
+                                    imageVector = Icons.Default.Menu,
+                                    contentDescription = stringResource(R.string.nav_drawer_open)
+                                )
+                            }
                         }
                     },
                     colors = TopAppBarDefaults.topAppBarColors(
@@ -192,6 +206,7 @@ fun DAMFlixApp(
                         onToggleFavorito = { pelicula -> viewModel.alternarFavorita(pelicula) },
                         onToggleVista = { pelicula -> viewModel.alternarVista(pelicula) },
                         onNavegarFormulario = { navController.navigate(Ruta.Formulario.path) },
+                        onNavegarDetalle = { id -> navController.navigate(Ruta.Detalle.crearRuta(id)) },
                         onVolverInicio = { navegarAInicio() }
                     )
                 }
@@ -204,6 +219,17 @@ fun DAMFlixApp(
                             navController.navigate(Ruta.Listado.path)
                         },
                         onVolverInicio = { navegarAInicio() }
+                    )
+                }
+                composable(
+                    route = Ruta.Detalle.path,
+                    arguments = listOf(navArgument("peliculaId") { type = NavType.IntType })
+                ) { backStackEntry ->
+                    val peliculaId = backStackEntry.arguments?.getInt("peliculaId") ?: 0
+                    DetallePeliculaScreen(
+                        peliculaId = peliculaId,
+                        viewModel = viewModel,
+                        onVolver = { navController.popBackStack() }
                     )
                 }
             }
